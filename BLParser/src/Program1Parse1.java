@@ -56,10 +56,16 @@ public final class Program1Parse1 extends Program1 {
         assert tokens.length() > 0 && tokens.front().equals("INSTRUCTION") : ""
                 + "Violation of: <\"INSTRUCTION\"> is proper prefix of tokens";
 
-        // TODO - fill in body
+        tokens.dequeue();
+        String start = tokens.dequeue();
+        tokens.dequeue();
 
-        // This line added just to make the program compilable.
-        return null;
+        body.parseBlock(tokens);
+
+        tokens.dequeue();
+        String end = tokens.dequeue();
+        return end;
+
     }
 
     /*

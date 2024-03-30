@@ -1,14 +1,14 @@
 Test Plan Project #8
 
 PROGRAM
-parseInstruction (OAK)
+parseInstruction (OAK) -------------------------
 parse (LAYAN)
 
 STATEMENT
-parseIf (OAK)
+parseIf (OAK)------------------------
 parseWhile (LAYAN)
 parseCall (LAYAN)
-*parse (OAK)
+*parse (OAK)------------------------
 *parseBlock (LAYAN)
 
 CREATE ADDITIONAL .BL FILES FOR STATEMENT (LAYAN)

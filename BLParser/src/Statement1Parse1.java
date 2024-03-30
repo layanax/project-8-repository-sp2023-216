@@ -63,8 +63,22 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 && tokens.front().equals("IF") : ""
                 + "Violation of: <\"IF\"> is proper prefix of tokens";
 
-        // TODO - fill in body
+        tokens.dequeue();
+        String cond = tokens.dequeue();
+        Condition c = parseCondition(cond);
 
+        Statement s1 = s.newInstance();
+        s1.parseBlock(tokens);
+        if (tokens.front().equals("ELSE")) {
+            Statement s2 = s.newInstance();
+            s2.parseBlock(tokens);
+            s.assembleIfElse(c, s1, s2);
+        } else {
+            s.assembleIf(c, s1);
+        }
+
+        tokens.dequeue();
+        tokens.dequeue();
     }
 
     /**
@@ -146,7 +160,14 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 : ""
                 + "Violation of: Tokenizer.END_OF_INPUT is a suffix of tokens";
 
-        // TODO - fill in body
+        String name = tokens.front();
+        if (name.equals("WHILE")) {
+            parseWhile(tokens, this);
+        } else if (name.equals("IF")) {
+            parseIf(tokens, this);
+        } else {
+            parseCall(tokens, this);
+        }
 
     }
 
