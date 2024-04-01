@@ -11,7 +11,7 @@ import components.utilities.Tokenizer;
  * Layered implementation of secondary methods {@code parse} and
  * {@code parseBlock} for {@code Statement}.
  *
- * @author Put your name here
+ * @author Layan Abdallah & Oak Hodous
  *
  */
 public final class Statement1Parse1 extends Statement1 {
@@ -108,7 +108,13 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 && tokens.front().equals("WHILE") : ""
                 + "Violation of: <\"WHILE\"> is proper prefix of tokens";
 
-        // TODO - fill in body
+        tokens.dequeue();
+        Condition c = parseCondition(tokens.dequeue());
+        tokens.dequeue();
+        while (tokens.front() != "IF" && tokens.front() != "END") {
+            s.assembleCall(tokens.dequeue());
+        }
+        s.assembleWhile(c, s);
 
     }
 
@@ -135,7 +141,10 @@ public final class Statement1Parse1 extends Statement1 {
                 && Tokenizer.isIdentifier(tokens.front()) : ""
                         + "Violation of: identifier string is proper prefix of tokens";
 
-        // TODO - fill in body
+        while (tokens.front() != "WHILE" && tokens.front() != "IF"
+                && tokens.front() != "END" && tokens.front() != "ELSE") {
+            s.assembleCall(tokens.dequeue());
+        }
 
     }
 
@@ -177,7 +186,15 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 : ""
                 + "Violation of: Tokenizer.END_OF_INPUT is a suffix of tokens";
 
-        // TODO - fill in body
+        int count = 0;
+        Statement s = this.newInstance();
+        while (tokens.front() != "WHILE" && tokens.front() != "IF"
+                && tokens.front() != "END" && tokens.front() != "ELSE") {
+            s.clear();
+            s.assembleCall(tokens.dequeue());
+            this.addToBlock(count, s);
+            count++;
+        }
 
     }
 

@@ -1,3 +1,5 @@
+import components.map.Map;
+import components.map.Map.Pair;
 import components.program.Program;
 import components.program.Program1;
 import components.queue.Queue;
@@ -6,12 +8,13 @@ import components.simplereader.SimpleReader1L;
 import components.simplewriter.SimpleWriter;
 import components.simplewriter.SimpleWriter1L;
 import components.statement.Statement;
+import components.utilities.Reporter;
 import components.utilities.Tokenizer;
 
 /**
  * Layered implementation of secondary method {@code parse} for {@code Program}.
  *
- * @author Put your name here
+ * @author Layan Abdallah & Oak Hodous
  *
  */
 public final class Program1Parse1 extends Program1 {
@@ -97,8 +100,74 @@ public final class Program1Parse1 extends Program1 {
         assert tokens.length() > 0 : ""
                 + "Violation of: Tokenizer.END_OF_INPUT is a suffix of tokens";
 
-        // TODO - fill in body
+        Program newProgram = new Program1Parse1();
+        String programToken = tokens.dequeue();
 
+        // 1st token should be "PROGRAM"
+        Reporter.assertElseFatalError(programToken.equals("PROGRAM"),
+                "Error: Keyword \"PROGRAM\" expected, found: \"" + programToken
+                        + "\"");
+
+        String programIdentifier = tokens.dequeue();
+        String is = tokens.dequeue();
+
+        // Check to for "IS"
+        Reporter.assertElseFatalError(is.equals("IS"),
+                "Error: Keyword \"IS\" expected, found: \"" + is + "\"");
+
+        //Map contains all Instructions, could be empty.
+        Map<String, Statement> context = newProgram.newContext();
+
+        //Either Instruction or Begin
+        String instrOrBeginToken = tokens.front();
+
+        while (instrOrBeginToken.equals("INSTRUCTION")) {
+            Statement body = newProgram.newBody();
+            String instructionName = parseInstruction(tokens, body);
+            for (Pair<String, Statement> element : context) {
+
+                Reporter.assertElseFatalError(
+                        !element.key().equals(instructionName),
+                        "Error: Instruction \"" + instructionName
+                                + "\" cannot be already defined");
+
+            }
+            context.add(instructionName, body);
+            instrOrBeginToken = tokens.front();
+
+        }
+
+        Reporter.assertElseFatalError(instrOrBeginToken.equals("BEGIN"),
+                "Error: Keyword \"BEGIN\" expected, found: \""
+                        + instrOrBeginToken + "\"");
+
+        instrOrBeginToken = tokens.dequeue();
+        Statement programBody = newProgram.newBody();
+        programBody.parseBlock(tokens);
+
+        String endToken = tokens.dequeue();
+
+        // Check for "END"
+        Reporter.assertElseFatalError(endToken.equals("END"),
+                "Error: Keyword \"END\" expected, found: \"" + endToken + "\"");
+
+        String endProgramIdentifier = tokens.dequeue();
+        // ID Has to equal
+        Reporter.assertElseFatalError(
+                endProgramIdentifier.equals(programIdentifier),
+                "Error: IDENTIFIER \"" + endProgramIdentifier
+                        + "\" at end of instruction \"" + programIdentifier
+                        + "\" must eqaul instruction name");
+
+        //Checks for end of program.
+        Reporter.assertElseFatalError(
+                tokens.front().equals("### END OF INPUT ###"),
+                "Error: END-OF-INPUT expected, found: " + "\"" + tokens.front()
+                        + "\"");
+
+        this.setName(programIdentifier);
+        this.swapBody(programBody);
+        this.swapContext(context);
     }
 
     /*
