@@ -59,14 +59,23 @@ public final class Program1Parse1 extends Program1 {
         assert tokens.length() > 0 && tokens.front().equals("INSTRUCTION") : ""
                 + "Violation of: <\"INSTRUCTION\"> is proper prefix of tokens";
 
-        tokens.dequeue();
+        Reporter.assertElseFatalError(tokens.dequeue().equals("INSTRUCTION"),
+                "Invalid token");
         String start = tokens.dequeue();
-        tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isIdentifier(start),
+                "Invalid identifier");
+        Reporter.assertElseFatalError(tokens.dequeue().equals("IS"),
+                "Invalid token");
 
         body.parseBlock(tokens);
 
-        tokens.dequeue();
+        Reporter.assertElseFatalError(tokens.dequeue().equals("END"),
+                "Invalid token");
         String end = tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isIdentifier(end),
+                "Invalid identifier");
+        Reporter.assertElseFatalError(start.equals(end),
+                "start identifier does not match end identifier.");
         return end;
 
     }

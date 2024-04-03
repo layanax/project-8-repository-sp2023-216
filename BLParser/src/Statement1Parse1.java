@@ -5,6 +5,7 @@ import components.simplewriter.SimpleWriter;
 import components.simplewriter.SimpleWriter1L;
 import components.statement.Statement;
 import components.statement.Statement1;
+import components.utilities.Reporter;
 import components.utilities.Tokenizer;
 
 /**
@@ -63,13 +64,21 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 && tokens.front().equals("IF") : ""
                 + "Violation of: <\"IF\"> is proper prefix of tokens";
 
-        tokens.dequeue();
-        String cond = tokens.dequeue();
-        Condition c = parseCondition(cond);
+        String start = tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isKeyword(start),
+                "token is invalid");
+        String condition = tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isCondition(condition),
+                "condition is invalid");
+        Condition c = parseCondition(condition);
+        Reporter.assertElseFatalError(tokens.dequeue().equals("THEN"),
+                "token is invalid");
 
         Statement s1 = s.newInstance();
         s1.parseBlock(tokens);
         if (tokens.front().equals("ELSE")) {
+            Reporter.assertElseFatalError(tokens.dequeue().equals("ELSE"),
+                    "Invalid token");
             Statement s2 = s.newInstance();
             s2.parseBlock(tokens);
             s.assembleIfElse(c, s1, s2);
@@ -77,8 +86,11 @@ public final class Statement1Parse1 extends Statement1 {
             s.assembleIf(c, s1);
         }
 
-        tokens.dequeue();
-        tokens.dequeue();
+        Reporter.assertElseFatalError(tokens.dequeue().equals("END"),
+                "Invalid token");
+        String endKind = tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isKeyword(endKind),
+                "Invalid token");
     }
 
     /**
@@ -108,13 +120,25 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 && tokens.front().equals("WHILE") : ""
                 + "Violation of: <\"WHILE\"> is proper prefix of tokens";
 
-        tokens.dequeue();
-        Condition c = parseCondition(tokens.dequeue());
-        tokens.dequeue();
-        while (tokens.front() != "IF" && tokens.front() != "END") {
-            s.assembleCall(tokens.dequeue());
-        }
-        s.assembleWhile(c, s);
+        String start = tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isKeyword(start),
+                "Invalid token");
+        String condition = tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isCondition(condition),
+                "Invalid token");
+        Condition con = parseCondition(condition);
+        Reporter.assertElseFatalError(tokens.dequeue().equals("DO"),
+                "Invalid token");
+
+        Statement s1 = s.newInstance();
+        s1.parseBlock(tokens);
+        s.assembleWhile(con, s1);
+
+        Reporter.assertElseFatalError(tokens.dequeue().equals("END"),
+                "Invalid token");
+        String endKind = tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isKeyword(endKind),
+                "Invalid token");
 
     }
 
@@ -141,10 +165,14 @@ public final class Statement1Parse1 extends Statement1 {
                 && Tokenizer.isIdentifier(tokens.front()) : ""
                         + "Violation of: identifier string is proper prefix of tokens";
 
-        while (tokens.front() != "WHILE" && tokens.front() != "IF"
-                && tokens.front() != "END" && tokens.front() != "ELSE") {
-            s.assembleCall(tokens.dequeue());
-        }
+        String name = tokens.dequeue();
+        Reporter.assertElseFatalError(Tokenizer.isIdentifier(name),
+                "Invalid token");
+        s.assembleCall(name);
+//        while (tokens.front() != "WHILE" && tokens.front() != "IF"
+//                && tokens.front() != "END" && tokens.front() != "ELSE") {
+//            s.assembleCall(tokens.dequeue());
+//        }
 
     }
 
@@ -170,6 +198,9 @@ public final class Statement1Parse1 extends Statement1 {
                 + "Violation of: Tokenizer.END_OF_INPUT is a suffix of tokens";
 
         String name = tokens.front();
+        Reporter.assertElseFatalError(
+                Tokenizer.isIdentifier(name) || Tokenizer.isKeyword(name),
+                "Invalid token");
         if (name.equals("WHILE")) {
             parseWhile(tokens, this);
         } else if (name.equals("IF")) {
