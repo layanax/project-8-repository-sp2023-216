@@ -217,15 +217,14 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 : ""
                 + "Violation of: Tokenizer.END_OF_INPUT is a suffix of tokens";
 
-        int count = 0;
         Statement s = this.newInstance();
-        while (tokens.front() != "WHILE" && tokens.front() != "IF"
-                && tokens.front() != "END" && tokens.front() != "ELSE") {
-            s.clear();
-            s.assembleCall(tokens.dequeue());
-            this.addToBlock(count, s);
-            count++;
+        while (!tokens.front().equals(Tokenizer.END_OF_INPUT)
+                && !tokens.front().equals("END")
+                && tokens.front().equals("ELSE")) {
+            this.parse(tokens);
+            s.addToBlock(s.lengthOfBlock(), this);
         }
+        this.transferFrom(s);
 
     }
 
