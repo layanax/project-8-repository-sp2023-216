@@ -78,7 +78,7 @@ public final class Statement1Parse1 extends Statement1 {
         s1.parseBlock(tokens);
         if (tokens.front().equals("ELSE")) {
             Reporter.assertElseFatalError(tokens.dequeue().equals("ELSE"),
-                    "Invalid token");
+                    "Invalid token1");
             Statement s2 = s.newInstance();
             s2.parseBlock(tokens);
             s.assembleIfElse(c, s1, s2);
@@ -87,10 +87,10 @@ public final class Statement1Parse1 extends Statement1 {
         }
 
         Reporter.assertElseFatalError(tokens.dequeue().equals("END"),
-                "Invalid token");
+                "Invalid token1");
         String endKind = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isKeyword(endKind),
-                "Invalid token");
+                "Invalid token1");
     }
 
     /**
@@ -135,7 +135,8 @@ public final class Statement1Parse1 extends Statement1 {
         s.assembleWhile(con, s1);
 
         Reporter.assertElseFatalError(tokens.dequeue().equals("END"),
-                "Invalid token");
+                "Invalid token4");
+        tokens.dequeue();
         String endKind = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isKeyword(endKind),
                 "Invalid token");
