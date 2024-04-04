@@ -78,19 +78,21 @@ public final class Statement1Parse1 extends Statement1 {
         s1.parseBlock(tokens);
         if (tokens.front().equals("ELSE")) {
             Reporter.assertElseFatalError(tokens.dequeue().equals("ELSE"),
-                    "Invalid token1");
+                    "Invalid token");
             Statement s2 = s.newInstance();
             s2.parseBlock(tokens);
             s.assembleIfElse(c, s1, s2);
         } else {
             s.assembleIf(c, s1);
         }
-
+        /*
+         * Dequeue end.
+         */
         Reporter.assertElseFatalError(tokens.dequeue().equals("END"),
-                "Invalid token1");
+                "Invalid token");
         String endKind = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isKeyword(endKind),
-                "Invalid token1");
+                "Invalid token");
     }
 
     /**
@@ -134,9 +136,10 @@ public final class Statement1Parse1 extends Statement1 {
         s1.parseBlock(tokens);
         s.assembleWhile(con, s1);
 
-        Reporter.assertElseFatalError(tokens.dequeue().equals("END"),
-                "Invalid token4");
-        tokens.dequeue();
+        String error = tokens.dequeue();
+
+        Reporter.assertElseFatalError(error.equals("END"),
+                "Invalid token test" + error);
         String endKind = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isKeyword(endKind),
                 "Invalid token");
@@ -160,11 +163,13 @@ public final class Statement1Parse1 extends Statement1 {
      * </pre>
      */
     private static void parseCall(Queue<String> tokens, Statement s) {
+
         assert tokens != null : "Violation of: tokens is not null";
         assert s != null : "Violation of: s is not null";
         assert tokens.length() > 0
                 && Tokenizer.isIdentifier(tokens.front()) : ""
-                        + "Violation of: identifier string is proper prefix of tokens";
+                        + "Violation of: identifier string is proper prefix of tokens error:"
+                        + tokens.front();
 
         String name = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isIdentifier(name),
@@ -219,9 +224,9 @@ public final class Statement1Parse1 extends Statement1 {
                 + "Violation of: Tokenizer.END_OF_INPUT is a suffix of tokens";
 
         Statement s = this.newInstance();
-        while (!tokens.front().equals(Tokenizer.END_OF_INPUT)
-                && !tokens.front().equals("END")
-                && tokens.front().equals("ELSE")) {
+        while (Tokenizer.isIdentifier(tokens.front())
+                || tokens.front().equals("IF")
+                || tokens.front().equals("WHILE")) {
             this.parse(tokens);
             s.addToBlock(s.lengthOfBlock(), this);
         }
