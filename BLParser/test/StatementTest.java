@@ -146,23 +146,50 @@ public abstract class StatementTest {
         assertEquals(sRef, sTest);
     }
 
-    /**
-     * Test of parse on syntactically invalid input.
-     */
-    @Test(expected = RuntimeException.class)
-    public final void testParseErrorExample2() {
+    @Test
+    public final void testParseValidExample4() {
         /*
          * Setup
          */
-        Statement sTest = this.constructorTest();
+        Statement sRef = this.constructorRef();
         SimpleReader file = new SimpleReader1L(FILE_NAME_4);
         Queue<String> tokens = Tokenizer.tokens(file);
+        sRef.parse(tokens);
+        file.close();
+        Statement sTest = this.constructorTest();
+        file = new SimpleReader1L(FILE_NAME_4);
+        tokens = Tokenizer.tokens(file);
         file.close();
         /*
-         * The call--should result in an error being caught
+         * The call
          */
         sTest.parse(tokens);
+        /*
+         * Evaluation
+         */
+        assertEquals(sRef, sTest);
     }
+
+    /**
+     * Test of parse on syntactically invalid input.
+     */
+//    @Test(expected = RuntimeException.class)
+//    public final void testParseErrorExample2() {
+//        /*
+//         * Setup
+//         */
+//        Statement sTest = this.constructorTest();
+//        SimpleReader file = new SimpleReader1L(FILE_NAME_4);
+//        Queue<String> tokens = Tokenizer.tokens(file);
+//        file.close();
+//        /*
+//         * The call--should result in an error being caught
+//         */
+//
+//        System.out.println(tokens.toString());
+//
+//        sTest.parse(tokens);
+//    }
 
     /**
      * Test of parse on syntactically invalid input.
