@@ -11,7 +11,7 @@ import components.utilities.Tokenizer;
 /**
  * JUnit test fixture for {@code Statement}'s constructor and kernel methods.
  *
- * @author Put your name here
+ * @author Layan Abdallah & Oak Hodous
  *
  */
 public abstract class StatementTest {
@@ -44,6 +44,7 @@ public abstract class StatementTest {
      */
     protected abstract Statement constructorRef();
 
+    //VALID TESTS FOR PARSE
     /**
      * Test of parse on syntactically valid input.
      */
@@ -71,27 +72,6 @@ public abstract class StatementTest {
         assertEquals(sRef, sTest);
     }
 
-    /**
-     * Test of parse on syntactically invalid input.
-     */
-    @Test(expected = RuntimeException.class)
-    public final void testParseErrorExample() {
-        /*
-         * Setup
-         */
-        Statement sTest = this.constructorTest();
-        SimpleReader file = new SimpleReader1L(FILE_NAME_2);
-        Queue<String> tokens = Tokenizer.tokens(file);
-        file.close();
-        /*
-         * The call--should result in an error being caught
-         */
-        sTest.parse(tokens);
-    }
-
-    // TODO - add more test cases for valid inputs for both parse and parseBlock
-    // TODO - add more test cases for as many distinct syntax errors as possible
-    //        for both parse and parseBlock
     /**
      * Test of parse on syntactically valid input.
      */
@@ -146,6 +126,9 @@ public abstract class StatementTest {
         assertEquals(sRef, sTest);
     }
 
+    /**
+     * Test of parse on syntactically valid input.
+     */
     @Test
     public final void testParseValidExample4() {
         /*
@@ -170,11 +153,31 @@ public abstract class StatementTest {
         assertEquals(sRef, sTest);
     }
 
+    //INVALID TESTS FOR PARSE
+
     /**
      * Test of parse on syntactically invalid input.
      */
     @Test(expected = RuntimeException.class)
-    public final void testParseErrorExample3() {
+    public final void testParseErrorExample() {
+        /*
+         * Setup
+         */
+        Statement sTest = this.constructorTest();
+        SimpleReader file = new SimpleReader1L(FILE_NAME_2);
+        Queue<String> tokens = Tokenizer.tokens(file);
+        file.close();
+        /*
+         * The call--should result in an error being caught
+         */
+        sTest.parse(tokens);
+    }
+
+    /**
+     * Test of parse on syntactically invalid input.
+     */
+    @Test(expected = RuntimeException.class)
+    public final void testParseErrorExample2() {
         /*
          * Setup
          */
@@ -187,5 +190,156 @@ public abstract class StatementTest {
          */
         sTest.parse(tokens);
     }
+
+    //VALID TESTS FOR PARSEBLOCK
+    /**
+     * Test of parseBlock on syntactically valid input.
+     */
+    @Test
+    public final void testParseBlockValidExample() {
+        /*
+         * Setup
+         */
+        Statement sRef = this.constructorRef();
+        SimpleReader file = new SimpleReader1L(FILE_NAME_1);
+        Queue<String> tokens = Tokenizer.tokens(file);
+        sRef.parseBlock(tokens);
+        file.close();
+        Statement sTest = this.constructorTest();
+        file = new SimpleReader1L(FILE_NAME_1);
+        tokens = Tokenizer.tokens(file);
+        file.close();
+        /*
+         * The call
+         */
+        sTest.parseBlock(tokens);
+        /*
+         * Evaluation
+         */
+        assertEquals(sRef, sTest);
+    }
+
+    /**
+     * Test of parseBlock on syntactically valid input.
+     */
+    @Test
+    public final void testParseBlockValidExample2() {
+        /*
+         * Setup
+         */
+        Statement sRef = this.constructorRef();
+        SimpleReader file = new SimpleReader1L(FILE_NAME_3);
+        Queue<String> tokens = Tokenizer.tokens(file);
+        sRef.parseBlock(tokens);
+        file.close();
+        Statement sTest = this.constructorTest();
+        file = new SimpleReader1L(FILE_NAME_3);
+        tokens = Tokenizer.tokens(file);
+        file.close();
+        /*
+         * The call
+         */
+        sTest.parseBlock(tokens);
+        /*
+         * Evaluation
+         */
+        assertEquals(sRef, sTest);
+    }
+
+    /**
+     * Test of parseBlock on syntactically valid input.
+     */
+    @Test
+    public final void testParseBlockValidExample3() {
+        /*
+         * Setup
+         */
+        Statement sRef = this.constructorRef();
+        SimpleReader file = new SimpleReader1L(FILE_NAME_5);
+        Queue<String> tokens = Tokenizer.tokens(file);
+        sRef.parseBlock(tokens);
+        file.close();
+        Statement sTest = this.constructorTest();
+        file = new SimpleReader1L(FILE_NAME_5);
+        tokens = Tokenizer.tokens(file);
+        file.close();
+        /*
+         * The call
+         */
+        sTest.parseBlock(tokens);
+        /*
+         * Evaluation
+         */
+        assertEquals(sRef, sTest);
+    }
+
+    /**
+     * Test of parseBlock on syntactically valid input.
+     */
+    @Test
+    public final void testParseBlockValidExample4() {
+        /*
+         * Setup
+         */
+        Statement sRef = this.constructorRef();
+        SimpleReader file = new SimpleReader1L(FILE_NAME_4);
+        Queue<String> tokens = Tokenizer.tokens(file);
+        sRef.parseBlock(tokens);
+        file.close();
+        Statement sTest = this.constructorTest();
+        file = new SimpleReader1L(FILE_NAME_4);
+        tokens = Tokenizer.tokens(file);
+        file.close();
+        /*
+         * The call
+         */
+        sTest.parseBlock(tokens);
+        /*
+         * Evaluation
+         */
+        assertEquals(sRef, sTest);
+    }
+
+    //INVALID TESTS FOR PARSEBLOCK
+
+    /**
+     * Test of parseBlock on syntactically invalid input.
+     */
+    @Test(expected = RuntimeException.class)
+    public final void testParseBlockErrorExample() {
+        /*
+         * Setup
+         */
+        Statement sTest = this.constructorTest();
+        SimpleReader file = new SimpleReader1L(FILE_NAME_2);
+        Queue<String> tokens = Tokenizer.tokens(file);
+        file.close();
+        /*
+         * The call--should result in an error being caught
+         */
+        sTest.parseBlock(tokens);
+    }
+
+    /**
+     * Test of parseBlock on syntactically invalid input.
+     */
+    @Test(expected = RuntimeException.class)
+    public final void testParseErrorBlockExample2() {
+        /*
+         * Setup
+         */
+        Statement sTest = this.constructorTest();
+        SimpleReader file = new SimpleReader1L(FILE_NAME_6);
+        Queue<String> tokens = Tokenizer.tokens(file);
+        file.close();
+        /*
+         * The call--should result in an error being caught
+         */
+        sTest.parseBlock(tokens);
+    }
+
+    // TODO - add more test cases for valid inputs for both parse and parseBlock
+    // TODO - add more test cases for as many distinct syntax errors as possible
+    //        for both parse and parseBlock
 
 }
