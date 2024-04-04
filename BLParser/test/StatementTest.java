@@ -173,27 +173,6 @@ public abstract class StatementTest {
     /**
      * Test of parse on syntactically invalid input.
      */
-//    @Test(expected = RuntimeException.class)
-//    public final void testParseErrorExample2() {
-//        /*
-//         * Setup
-//         */
-//        Statement sTest = this.constructorTest();
-//        SimpleReader file = new SimpleReader1L(FILE_NAME_4);
-//        Queue<String> tokens = Tokenizer.tokens(file);
-//        file.close();
-//        /*
-//         * The call--should result in an error being caught
-//         */
-//
-//        System.out.println(tokens.toString());
-//
-//        sTest.parse(tokens);
-//    }
-
-    /**
-     * Test of parse on syntactically invalid input.
-     */
     @Test(expected = RuntimeException.class)
     public final void testParseErrorExample3() {
         /*

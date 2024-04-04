@@ -231,9 +231,6 @@ public final class Statement1Parse1 extends Statement1 {
             s.addToBlock(s.lengthOfBlock(), this);
         }
         this.transferFrom(s);
-        SimpleWriter out = new SimpleWriter1L();
-        out.println(tokens.front());
-        out.close();
 
     }
 
