@@ -4,8 +4,7 @@ PROGRAM Test IS
      move
      turnleft
   END one
-  
-BEGIN
+
   INSTRUCTION two IS
     one
     IF next-is-not-empty THEN
@@ -15,17 +14,22 @@ BEGIN
       one
     END IF
   END two
-  
+
+  INSTRUCTION three IS
+    move
+    move
+  END three
+
+BEGIN
   infect
-  WHILE true DO
+  WHILE next-is-not-empty DO
+    two
     three
     IF next-is-empty THEN
       two
     END IF
-    two
     one
     one
-    three
     turnright
   END WHILE
 END Test

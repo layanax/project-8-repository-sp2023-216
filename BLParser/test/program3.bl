@@ -24,7 +24,7 @@ INSTRUCTION three IS
       two
       one
     END IF
-  END two
+  END three
 
 BEGIN
   infect
