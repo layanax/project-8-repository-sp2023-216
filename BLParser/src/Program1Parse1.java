@@ -61,23 +61,31 @@ public final class Program1Parse1 extends Program1 {
 
         Reporter.assertElseFatalError(tokens.dequeue().equals("INSTRUCTION"),
                 "Invalid token");
+
+        //retrieve and validate name of instruction
         String start = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isIdentifier(start),
                 "Invalid identifier");
+
+        //check for IS
         Reporter.assertElseFatalError(tokens.dequeue().equals("IS"),
                 "Invalid token");
 
+        //parse body of instruction
         body.parseBlock(tokens);
 
+        //check for END
         Reporter.assertElseFatalError(tokens.dequeue().equals("END"),
                 "Invalid token");
+
+        //retrieve and validate end indentifier and match to start indentifier
         String end = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isIdentifier(end),
                 "Invalid identifier");
         Reporter.assertElseFatalError(start.equals(end),
                 "start identifier does not match end identifier.");
-        return end;
 
+        return end;
     }
 
     /*
@@ -110,31 +118,29 @@ public final class Program1Parse1 extends Program1 {
                 + "Violation of: Tokenizer.END_OF_INPUT is a suffix of tokens";
 
         Program newProgram = new Program1Parse1();
-        String programToken = tokens.dequeue();
 
-        // 1st token should be "PROGRAM"
+        //check first token is PROGRAM
+        String programToken = tokens.dequeue();
         Reporter.assertElseFatalError(programToken.equals("PROGRAM"),
                 "Error: Keyword \"PROGRAM\" expected, found: \"" + programToken
                         + "\"");
 
+        //retrieve and validate program identifier
         String programIdentifier = tokens.dequeue();
         String is = tokens.dequeue();
-
-        // Check to for "IS"
         Reporter.assertElseFatalError(is.equals("IS"),
                 "Error: Keyword \"IS\" expected, found: \"" + is + "\"");
 
-        //Map contains all Instructions, could be empty.
+        //create new context for program
         Map<String, Statement> context = newProgram.newContext();
 
-        //Either Instruction or Begin
+        //parse instructions until BEGIN
         String instrOrBeginToken = tokens.front();
-
         while (instrOrBeginToken.equals("INSTRUCTION")) {
             Statement body = newProgram.newBody();
             String instructionName = parseInstruction(tokens, body);
+            //check for duplicate instructions
             for (Pair<String, Statement> element : context) {
-
                 Reporter.assertElseFatalError(
                         !element.key().equals(instructionName),
                         "Error: Instruction \"" + instructionName
@@ -146,34 +152,34 @@ public final class Program1Parse1 extends Program1 {
 
         }
 
+        //ensure BEGIN is next token
         Reporter.assertElseFatalError(instrOrBeginToken.equals("BEGIN"),
                 "Error: Keyword \"BEGIN\" expected, found: \""
                         + instrOrBeginToken + "\"");
 
+        //parse main program body
         instrOrBeginToken = tokens.dequeue();
         Statement programBody = newProgram.newBody();
         programBody.parseBlock(tokens);
 
+        //ensure program ends with END followed by program identifier
         String endToken = tokens.dequeue();
-
-        // Check for "END"
         Reporter.assertElseFatalError(endToken.equals("END"),
                 "Error: Keyword \"END\" expected, found: \"" + endToken + "\"");
-
         String endProgramIdentifier = tokens.dequeue();
-        // ID Has to equal
         Reporter.assertElseFatalError(
                 endProgramIdentifier.equals(programIdentifier),
                 "Error: IDENTIFIER \"" + endProgramIdentifier
                         + "\" at end of instruction \"" + programIdentifier
                         + "\" must eqaul instruction name");
 
-        //Checks for end of program.
+        //final token
         Reporter.assertElseFatalError(
                 tokens.front().equals("### END OF INPUT ###"),
                 "Error: END-OF-INPUT expected, found: " + "\"" + tokens.front()
                         + "\"");
 
+        //initialize program with parsed info
         this.setName(programIdentifier);
         this.swapBody(programBody);
         this.swapContext(context);

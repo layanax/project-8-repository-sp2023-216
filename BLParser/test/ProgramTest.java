@@ -42,6 +42,8 @@ public abstract class ProgramTest {
      */
     protected abstract Program constructorRef();
 
+    //VALID PARSE TESTS
+
     /**
      * Test of parse on syntactically valid input.
      */
@@ -68,25 +70,6 @@ public abstract class ProgramTest {
         assertEquals(pRef, pTest);
     }
 
-    /**
-     * Test of parse on syntactically invalid input.
-     */
-    @Test(expected = RuntimeException.class)
-    public final void testParseErrorExample() {
-        /*
-         * Setup
-         */
-        Program pTest = this.constructorTest();
-        SimpleReader file = new SimpleReader1L(FILE_NAME_2);
-        Queue<String> tokens = Tokenizer.tokens(file);
-        file.close();
-        /*
-         * The call--should result in a syntax error being found
-         */
-        pTest.parse(tokens);
-    }
-
-    // TODO - add more test cases for valid inputs
     /**
      * Test of parse on syntactically valid input.
      */
@@ -139,7 +122,26 @@ public abstract class ProgramTest {
         assertEquals(pRef, pTest);
     }
 
-    // TODO - add more test cases for as many distinct syntax errors as possible
+    //INVALID PARSE TESTS
+
+    /**
+     * Test of parse on syntactically invalid input.
+     */
+    @Test(expected = RuntimeException.class)
+    public final void testParseErrorExample() {
+        /*
+         * Setup
+         */
+        Program pTest = this.constructorTest();
+        SimpleReader file = new SimpleReader1L(FILE_NAME_2);
+        Queue<String> tokens = Tokenizer.tokens(file);
+        file.close();
+        /*
+         * The call--should result in a syntax error being found
+         */
+        pTest.parse(tokens);
+    }
+
     /**
      * Test of parse on syntactically invalid input.
      */

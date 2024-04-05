@@ -64,21 +64,28 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 && tokens.front().equals("IF") : ""
                 + "Violation of: <\"IF\"> is proper prefix of tokens";
 
+        //assign token to start and check
         String start = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isKeyword(start),
                 "token is invalid");
+
+        //assign token to condition and check
         String condition = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isCondition(condition),
                 "condition is invalid");
+
+        //parse condition and check THEN
         Condition c = parseCondition(condition);
         Reporter.assertElseFatalError(tokens.dequeue().equals("THEN"),
                 "token is invalid");
 
+        //create new statement and parse block
         Statement s1 = s.newInstance();
         s1.parseBlock(tokens);
         if (tokens.front().equals("ELSE")) {
             Reporter.assertElseFatalError(tokens.dequeue().equals("ELSE"),
                     "Invalid token");
+            //create new statement for ELSE
             Statement s2 = s.newInstance();
             s2.parseBlock(tokens);
             s.assembleIfElse(c, s1, s2);
@@ -122,22 +129,29 @@ public final class Statement1Parse1 extends Statement1 {
         assert tokens.length() > 0 && tokens.front().equals("WHILE") : ""
                 + "Violation of: <\"WHILE\"> is proper prefix of tokens";
 
+        //assign token to start and check
         String start = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isKeyword(start),
                 "Invalid token");
+
+        //assign token to condition and check
         String condition = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isCondition(condition),
                 "Invalid token");
+
+        //parse condition then check DO
         Condition con = parseCondition(condition);
         Reporter.assertElseFatalError(tokens.dequeue().equals("DO"),
                 "Invalid token");
 
+        //create new statement and parse block
         Statement s1 = s.newInstance();
         s1.parseBlock(tokens);
         s.assembleWhile(con, s1);
 
         String error = tokens.dequeue();
 
+        //check for END token
         Reporter.assertElseFatalError(error.equals("END"),
                 "Invalid token test" + error);
         String endKind = tokens.dequeue();
@@ -168,17 +182,14 @@ public final class Statement1Parse1 extends Statement1 {
         assert s != null : "Violation of: s is not null";
         assert tokens.length() > 0
                 && Tokenizer.isIdentifier(tokens.front()) : ""
-                        + "Violation of: identifier string is proper prefix of tokens error:"
-                        + tokens.front();
+                        + "Violation of: identifier string is proper prefix of"
+                        + "tokens error:" + tokens.front();
 
+        //checks if token is a valid identifier
         String name = tokens.dequeue();
         Reporter.assertElseFatalError(Tokenizer.isIdentifier(name),
                 "Invalid token");
         s.assembleCall(name);
-//        while (tokens.front() != "WHILE" && tokens.front() != "IF"
-//                && tokens.front() != "END" && tokens.front() != "ELSE") {
-//            s.assembleCall(tokens.dequeue());
-//        }
 
     }
 
@@ -207,6 +218,8 @@ public final class Statement1Parse1 extends Statement1 {
         Reporter.assertElseFatalError(
                 Tokenizer.isIdentifier(name) || Tokenizer.isKeyword(name),
                 "Invalid token");
+
+        //parse and execute WHILE or IF or CALL
         if (name.equals("WHILE")) {
             parseWhile(tokens, this);
         } else if (name.equals("IF")) {
@@ -224,12 +237,15 @@ public final class Statement1Parse1 extends Statement1 {
                 + "Violation of: Tokenizer.END_OF_INPUT is a suffix of tokens";
 
         Statement s = this.newInstance();
+
+        //parse statements until there are no more statements/blocks to parse
         while (Tokenizer.isIdentifier(tokens.front())
                 || tokens.front().equals("IF")
                 || tokens.front().equals("WHILE")) {
             this.parse(tokens);
             s.addToBlock(s.lengthOfBlock(), this);
         }
+        //transfer parsed block to current block
         this.transferFrom(s);
 
     }
